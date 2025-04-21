@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Move the Ball</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #1a1a1a;
+      font-family: Arial, sans-serif;
+    }
+
+    .score-board {
+      color: white;
+      font-size: 24px;
+      margin: 20px 0;
+    }
+
+    .field {
+      cursor: pointer;
+      width: 800px;
+      height: 500px;
+      background: #2d5a27;
+      position: relative;
+      border: 5px solid white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .center-line {
+      position: absolute;
+      width: 100%;
+      height: 5px;
+      background: white;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .center-circle {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 5px solid white;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .goalpost {
+      position: absolute;
+      width: 20px;
+      height: 100px;
+      background: white;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .goal-area {
+      position: absolute;
+      width: 50px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.2);
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .ball {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .ball::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(45deg, transparent 45%, black 45%, black 55%, transparent 55%),
+        linear-gradient(-45deg, transparent 45%, black 45%, black 55%, transparent 55%),
+        linear-gradient(90deg, transparent 45%, black 45%, black 55%, transparent 55%),
+        linear-gradient(0deg, transparent 45%, black 45%, black 55%, transparent 55%);
+      border-radius: 50%;
+      transform: rotate(45deg);
+    }
+
+    .ball::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, #f5f5f5, #d3d3d3);
+      border-radius: 50%;
+      opacity: 0.8;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="score-board">Score: <span id="score">0</span></div>
+  <div class="field">
+    <div class="center-line"></div>
+    <div class="center-circle"></div>
+    <div class="goal-area"></div>
+    <div class="goalpost"></div>
+    <div class="ball"></div>
+  </div>
+
+  <script>
+    const field = document.querySelector('.field');
+    const ball = document.querySelector('.ball');
+    const scoreElement = document.getElementById('score');
+    let score = 0;
+
+    function moveBall(event) {
+      const fieldRect = field.getBoundingClientRect();
+      const ballRect = ball.getBoundingClientRect();
+      const goalArea = document.querySelector('.goal-area');
+      const goalAreaRect = goalArea.getBoundingClientRect();
+
+      // Calculate new position with ball radius offset
+      const ballRadius = ballRect.width / 2;
+      let newX = event.clientX - fieldRect.left - ballRadius;
+      let newY = event.clientY - fieldRect.top - ballRadius;
+
+      // Keep ball within field boundaries with proper padding
+      newX = Math.max(ballRadius, Math.min(newX, fieldRect.width - ballRadius));
+      newY = Math.max(ballRadius, Math.min(newY, fieldRect.height - ballRadius));
+
+      // Apply new position
+      ball.style.left = newX + 'px';
+      ball.style.top = newY + 'px';
+
+      // Check if ball is in goal area
+      const ballCenterX = newX + ballRadius;
+      const ballCenterY = newY + ballRadius;
+
+      if (ballCenterX >= goalAreaRect.left - fieldRect.left &&
+        ballCenterX <= goalAreaRect.right - fieldRect.left &&
+        ballCenterY >= goalAreaRect.top - fieldRect.top &&
+        ballCenterY <= goalAreaRect.bottom - fieldRect.top) {
+        score++;
+        scoreElement.textContent = score;
+      }
+    }
+
+    field.addEventListener('click', moveBall);
+  </script>
+</body>
+
+</html>
