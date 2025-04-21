@@ -48,13 +48,13 @@
             }
 
             .goalpost {
-                width: 3vw;
-                height: 15vw;
+                width: 30vw;
+                height: 3vw;
             }
 
             .goal-area {
-                width: 8vw;
-                height: 30vw;
+                width: 50vw;
+                height: 8vw;
             }
 
             .ball {
@@ -93,22 +93,22 @@
 
         .goalpost {
             position: absolute;
-            width: 20px;
-            height: 100px;
+            width: 100px;
+            height: 20px;
             background: white;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .goal-area {
             position: absolute;
-            width: 50px;
-            height: 200px;
+            width: 200px;
+            height: 50px;
             background: rgba(255, 255, 255, 0.2);
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .ball {
@@ -196,6 +196,10 @@
                 ballCenterY <= goalAreaRect.bottom - fieldRect.top) {
                 score++;
                 scoreElement.textContent = score;
+                // Reset ball position after scoring
+                ball.style.left = '50%';
+                ball.style.top = '50%';
+                ball.style.transform = 'translate(-50%, -50%)';
             }
         }
 
